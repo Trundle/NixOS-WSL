@@ -4,8 +4,9 @@
 import <nixpkgs/nixos> {
   configuration = {
     imports = [
-      ./configuration.nix
+      ./module.nix
       ./build-tarball.nix
+      ./configuration.nix
     ];
   };
 
