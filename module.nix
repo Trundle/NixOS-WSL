@@ -8,7 +8,7 @@ let
   };
 in
 {
-  imports = [ "${modulesPath}/profiles/minimal.nix" ];
+  imports = [ "${modulesPath}/profiles/minimal.nix" ./build-tarball.nix ];
 
   options.boot.wsl = {
     enable = mkEnableOption "Windows WSL support";
