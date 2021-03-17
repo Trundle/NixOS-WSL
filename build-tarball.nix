@@ -49,27 +49,34 @@ let
 
     # Copy the system configuration
     mkdir -p ./etc/nixos
-    cp ${./configuration.nix} ./etc/nixos/configuration.nix
-    cp ${./syschdemd.nix} ./etc/nixos/syschdemd.nix
-    cp ${./syschdemd.sh} ./etc/nixos/syschdemd.sh
+    cp -LR ${config.boot.wsl.etcNixos}/* ./etc/nixos
   '';
 in
 {
-  system.build.tarball = pkgs.callPackage "${nixpkgs}/nixos/lib/make-system-tarball.nix" {
-    # No contents, structure will be added by prepare script
-    contents = [ ];
+  options.boot.wsl.etcNixos = mkOption {
+    description = ''
+      A directory to recursively copy into /etc/nixos within the tarball.
+    '';
+    type = types.path;
+    default = lib.cleanSource ./.;
+  };
+  config = {
+    system.build.tarball = pkgs.callPackage "${nixpkgs}/nixos/lib/make-system-tarball.nix" {
+      # No contents, structure will be added by prepare script
+      contents = [ ];
 
-    storeContents = pkgs2storeContents [
-      config.system.build.toplevel
-      pkgs.stdenv
-      channelSources
-      preparer
-    ];
+      storeContents = pkgs2storeContents [
+        config.system.build.toplevel
+        pkgs.stdenv
+        channelSources
+        preparer
+      ];
 
-    extraCommands = "${preparer}/bin/wsl-prepare";
+      extraCommands = "${preparer}/bin/wsl-prepare";
 
-    # Use gzip
-    compressCommand = "gzip";
-    compressionExtension = ".gz";
+      # Use gzip
+      compressCommand = "gzip";
+      compressionExtension = ".gz";
+    };
   };
 }
