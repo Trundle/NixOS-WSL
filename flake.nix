@@ -6,10 +6,10 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }:
     {
-      nixosModules = [
-        (import ./module.nix)
-        (import ./build-tarball.nix)
-      ];
+      nixosModules = {
+        wsl = (import ./module.nix);
+        build-tarball = (import ./build-tarball.nix);
+      };
       nixosConfigurations.mysystem = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
