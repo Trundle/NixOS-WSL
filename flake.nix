@@ -6,11 +6,12 @@
 
   outputs = { self, nixpkgs, flake-utils, ... }:
     {
+      nixosModule = import ./module.nix;
       nixosConfigurations.mysystem = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          self.nixosModule
           (import ./configuration.nix)
-          (import ./build-tarball.nix)
         ];
         specialArgs = { inherit nixpkgs; };
       };
